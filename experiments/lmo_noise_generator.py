@@ -1,4 +1,19 @@
 import numpy as np
+import os
+import json
+
+
+def generate_dynamic_noise(path, distributions=["Gamma", "Exponential", "Uniform"], noise_size=1):
+
+    directory=os.path.dirname(__file__)
+    file_path = os.path.join(directory, 'lmo_noise_parameters', path)
+
+    with open(file_path, 'r') as file:
+        params = json.load(file)
+
+    b = generate_lmo_b(params, distributions=distributions, noise_size=noise_size)
+    noise = np.random.laplace(0, 1/b)
+    return noise
 
 
 def generate_lmo_noise(lmo, distributions, noise_size):

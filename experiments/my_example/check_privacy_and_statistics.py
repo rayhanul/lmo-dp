@@ -3,9 +3,10 @@ import json
 import numpy as np
 from pathlib import Path
 
-from accounting import rdp_accounting, accounting_manager
-from lmo_noise_generator import generate_lmo_noise
-from dataset.dataset_info import dataset_size, classification_steps, batchsize
+import rdp_accounting, accounting_manager
+from dynamic_noise_generator import generate_dynamic_noise
+from dataset_info import dataset_size, classification_steps, batchsize
+
 
 max_order = 128
 DEFAULT_ALPHAS = range(2, max_order + 1)  # list: [2, 3, ..., 128]
@@ -87,7 +88,7 @@ def compute_usefulness_lmo(lmo, lmo_gamma=0.9):
     
     return usefulness, lmo_gamma
 
-    
+
 if __name__ == '__main__':
     try:
         jsonpath=sys.argv[1]

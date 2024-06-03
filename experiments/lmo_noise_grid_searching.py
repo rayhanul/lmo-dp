@@ -141,7 +141,7 @@ if __name__ == '__main__':
     lmo_gamma = 0.9
     
     demo_cnt = False  # The options could be {False, "any numbers"(3000, ...)}; Choosing False will go through all the paramters.
-    save_df = False
+    save_df = True
     
     searched_parameters_epsilon = search_epsilon(S, epsilon_threshold, demo_cnt=demo_cnt)
     print(f"When considering maximum the epsilon below {epsilon_threshold}, we found the parameters: {searched_parameters_epsilon}.")
