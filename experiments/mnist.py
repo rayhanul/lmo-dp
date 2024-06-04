@@ -295,7 +295,7 @@ def main():
     parser.add_argument(
         "--budget",
         type=float,
-        default=2.0,
+        default=0.7,
         help="The maximum epsilon to be spent",
     )
     args = parser.parse_args()
