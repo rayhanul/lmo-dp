@@ -74,6 +74,26 @@ class SampleConvNet(nn.Module):
 all_results={}
 eps_acc_results={}
 
+def get_log_epsilon(epsilon, gamma):
+    """
+    Calculate the logarithmic expression given gamma and x.
+
+    Parameters:
+        gamma (float): The parameter gamma in the equation.
+        x (float): The exponent variable in the equation.
+
+    Returns:
+        float: The result of the logarithmic expression.
+    """
+    # Calculate the inner expression
+    inner_expression = 1 + gamma * (np.exp(epsilon) - 1)
+
+    # Calculate the logarithm of the inner expression
+    result = np.log(inner_expression)
+
+    return result
+
+
 def train(args, model, device, train_loader, optimizer, privacy_engine, rdp_manager, epoch):
     model.train()
     criterion = nn.CrossEntropyLoss()
@@ -114,6 +134,7 @@ def train(args, model, device, train_loader, optimizer, privacy_engine, rdp_mana
         #                         steps=938 * epoch,
         # )
         overall_epsilon, sigma = lmo_accountant.get_complete_privacy(epoch=epoch)
+        overall_epsilon['eps_rdp'] = get_log_epsilon(epsilon=overall_epsilon['eps_rdp'], gamma=args.batch_size/60000)
         print(f"Train Epoch: {epoch} \t Epsilon: {np.mean(overall_epsilon['eps_rdp']):.6f}, \t Accuracy: {accuracy}")
         return {'epsilon': overall_epsilon['eps_rdp'], 'acc': accuracy}
     else:
@@ -199,7 +220,7 @@ def main():
         "-n",
         "--epochs",
         type=int,
-        default=10,
+        default=10000,
         metavar="N",
         help="number of epochs to train",
     )
@@ -274,7 +295,7 @@ def main():
     parser.add_argument(
         "--budget",
         type=float,
-        default=.1,
+        default=2.0,
         help="The maximum epsilon to be spent",
     )
     args = parser.parse_args()

@@ -35,6 +35,6 @@ def get_complete_privacy(epoch):
 
     overall_epsilon, sigma = compute_overall_privacy(overall_epsilon_lmo, lmo['delta'], dataset="MNIST")
 
-    overall_epsilon['eps_rdp']  = (overall_epsilon['eps_rdp'] *epoch)/6
+    overall_epsilon['eps_rdp']  = (overall_epsilon['eps_rdp'] *epoch)
 
     return overall_epsilon, sigma 
