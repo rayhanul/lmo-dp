@@ -220,7 +220,7 @@ def main():
         "-n",
         "--epochs",
         type=int,
-        default=10000,
+        default=1000,
         metavar="N",
         help="number of epochs to train",
     )
@@ -295,7 +295,7 @@ def main():
     parser.add_argument(
         "--budget",
         type=float,
-        default=0.7,
+        default=0,
         help="The maximum epsilon to be spent",
     )
     args = parser.parse_args()
