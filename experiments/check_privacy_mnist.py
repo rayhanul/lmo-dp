@@ -14,7 +14,7 @@ DEFAULT_DISTRIBUTIONS = ["Gamma", "Exponential","Uniform"]
 DEFAULT_DELTA2 = 8e-6
 
 
-def compute_overall_privacy(epsilon, delta=DEFAULT_DELTA, dataset="MNIST", sensitivity=1, compute_sigma_only=False):
+def compute_overall_privacy(epsilon, delta=DEFAULT_DELTA, dataset="MNIST", sensitivity=1, compute_sigma_only=False, steps=938):
     sigma = np.sqrt((2*np.log(1.25/delta)*float(sensitivity)**2)/float(epsilon)**2)
     if compute_sigma_only:
         return sigma
@@ -31,7 +31,7 @@ def compute_overall_privacy(epsilon, delta=DEFAULT_DELTA, dataset="MNIST", sensi
                             sigma=sigma,
                             sample_rate=batchsize[dataset]/dataset_size[dataset],
                             target_delta=delta,
-                            steps=classification_steps[dataset],
+                            steps=steps,
     )
     return overall_epsilon, sigma
 

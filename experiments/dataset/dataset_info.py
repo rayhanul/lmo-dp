@@ -15,7 +15,7 @@ classification_steps={
     "QQP": 1062,
     "E2E": 410,
     "MNIST": 938,
-    "CIFAR10": 938,
+    "CIFAR10": 10,
 } # classification tasks - 6 epoches; generation tasks (E2E) - 10 epoches;
 
 # running experiments information

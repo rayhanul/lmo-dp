@@ -49,7 +49,6 @@ from accounting import rdp_accounting, accounting_manager
 import lmo_accountant
 
 
-
 logging.basicConfig(
     format="%(asctime)s:%(levelname)s:%(message)s",
     datefmt="%m/%d/%Y %H:%M:%S",
@@ -141,6 +140,25 @@ def accuracy(preds, labels):
     return (preds == labels).mean()
 
 
+def get_log_epsilon(epsilon, gamma):
+    """
+    Calculate the logarithmic expression given gamma and x.
+
+    Parameters:
+        gamma (float): The parameter gamma in the equation.
+        x (float): The exponent variable in the equation.
+
+    Returns:
+        float: The result of the logarithmic expression.
+    """
+    # Calculate the inner expression
+    inner_expression = 1 + gamma * (np.exp(epsilon) - 1)
+
+    # Calculate the logarithm of the inner expression
+    result = np.log(inner_expression)
+
+    return result
+
 def train(args, model, train_loader, optimizer, privacy_engine, epoch, device):
     start_time = datetime.now()
 
@@ -204,12 +222,26 @@ def train(args, model, train_loader, optimizer, privacy_engine, epoch, device):
 
         if i % args.print_freq == 0:
             if not args.disable_dp:
-                epsilon = privacy_engine.accountant.get_epsilon(delta=args.delta)
+                # epsilon = privacy_engine.accountant.get_epsilon(delta=args.delta)
+                if len(privacy_engine.accountant.history)>0:
+                   ( _, _, steps)= privacy_engine.accountant.history[0]
+                else:
+                    steps=1
+
+                overall_epsilon, sigma = lmo_accountant.get_complete_privacy(epoch=epoch, dataset="CIFAR10", steps=steps)
+                overall_epsilon['eps_rdp'] = get_log_epsilon(epsilon=overall_epsilon['eps_rdp'], gamma=args.batch_size/60000)
+                epsilon = overall_epsilon['eps_rdp']
+                # overall_epsilon = rdp_accounting.compute_epsilon(
+                #                 sigma=args.sigma,
+                #                 sample_rate=256/60000,
+                #                 target_delta=args.delta,
+                #                 steps=938 * epoch,
+                # )
                 print(
                     f"\tTrain Epoch: {epoch} \t"
                     f"Loss: {np.mean(losses):.6f} "
                     f"Acc@1: {np.mean(top1_acc):.6f} "
-                    f"(ε = {epsilon:.2f}, δ = {args.delta})"
+                    f"(ε = {epsilon}, δ = {args.delta})"
                 )
             else:
                 print(
@@ -357,6 +389,7 @@ def main():
             max_grad_norm = args.max_per_sample_grad_norm
 
         privacy_engine = PrivacyEngine(
+            accountant="rdp",
             secure_mode=args.secure_rng,
         )
         clipping = "per_layer" if args.clip_per_layer else "flat"
@@ -406,7 +439,7 @@ def main():
             filename=args.checkpoint_file + ".tar",
         )
     # saving data to pickle file 
-    file_name=f'data_gaussian_cifar10_sigma_{args.sigma}_epochs_{args.epochs}.pkl'
+    file_name=f'data_gaussian_cifar10_dynamic_noise_epochs_{args.epochs}.pkl'
     with open(file_name, 'wb') as file:
         pickle.dump(data, file)
     if rank == 0:
@@ -431,6 +464,11 @@ def main():
 def parse_args():
     parser = argparse.ArgumentParser(description="PyTorch CIFAR10 DP Training")
     parser.add_argument("--grad_sample_mode", type=str, default="hooks")
+
+    noise = generate_dynamic_noise('optimized_usefulness/lmo_eps3.json')
+    noise = np.abs(noise[0])
+   
+
     parser.add_argument(
         "-j",
         "--workers",
@@ -520,7 +558,7 @@ def parse_args():
     parser.add_argument(
         "--sigma",
         type=float,
-        default=1.5,
+        default=noise,
         metavar="S",
         help="Noise multiplier (default 1.0)",
     )
