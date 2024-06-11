@@ -5,6 +5,7 @@ dataset_size = {
     "QQP": 363847,
     "E2E": 42061,
     "MNIST": 60000,
+    "CIFAR10": 60000,
 }
 
 classification_steps={
@@ -13,7 +14,8 @@ classification_steps={
     "QNLI": 306,
     "QQP": 1062,
     "E2E": 410,
-    "MNIST": 938
+    "MNIST": 938,
+    "CIFAR10": 938,
 } # classification tasks - 6 epoches; generation tasks (E2E) - 10 epoches;
 
 # running experiments information
@@ -23,5 +25,6 @@ batchsize={
     "QNLI": 2048,
     "QQP": 2048,
     "E2E": 16,
-    "MNIST": 64
+    "MNIST": 64,
+    "CIFAR10":2000, 
 }
