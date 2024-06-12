@@ -133,7 +133,11 @@ def train(args, model, device, train_loader, optimizer, privacy_engine, rdp_mana
         #                         target_delta=args.delta,
         #                         steps=938 * epoch,
         # )
-        overall_epsilon, sigma = lmo_accountant.get_complete_privacy(epoch=epoch, dataset="MNIST")
+        if len(privacy_engine.accountant.history)>0:
+            ( _, _, steps)= privacy_engine.accountant.history[0]
+        else:
+            steps=1
+        overall_epsilon, sigma = lmo_accountant.get_complete_privacy(epoch=epoch, dataset="MNIST", steps=steps)
         overall_epsilon['eps_rdp'] = get_log_epsilon(epsilon=overall_epsilon['eps_rdp'], gamma=args.batch_size/60000)
         print(f"Train Epoch: {epoch} \t Epsilon: {np.mean(overall_epsilon['eps_rdp']):.6f}, \t Accuracy: {accuracy}")
         return {'epsilon': overall_epsilon['eps_rdp'], 'acc': accuracy}

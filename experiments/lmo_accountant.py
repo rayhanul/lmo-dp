@@ -7,7 +7,7 @@ from check_privacy_mnist import *
 
 
 
-def get_complete_privacy(epoch, dataset, steps=938):
+def get_complete_privacy(epoch, dataset, steps):
     try:
         jsonpath=sys.argv[1]
         lmo = json.loads(Path(jsonpath).read_text())
@@ -34,7 +34,5 @@ def get_complete_privacy(epoch, dataset, steps=938):
     overall_epsilon_lmo, opt_order, rdp_lmo = compute_privacy_lmo(lmo)
 
     overall_epsilon, sigma = compute_overall_privacy(overall_epsilon_lmo, lmo['delta'], dataset=dataset, steps=steps)
-    if dataset=="MNIST":
-        overall_epsilon['eps_rdp']  = (overall_epsilon['eps_rdp'] *epoch)
 
     return overall_epsilon, sigma 
