@@ -64,14 +64,14 @@ def get_complete_privacy(epoch, params , dataset, steps=938):
 
 
     #     }
-    overall_epsilon_lmo, opt_order, rdp_lmo = compute_privacy_lmo(lmo=params, steps=epoch)
+    overall_epsilon_lmo, opt_order, rdp_lmo = compute_privacy_lmo(lmo=params, steps=steps)
 
     # adding effect of T ... 
     overall_epsilon_lmo = overall_epsilon_lmo * np.sqrt(epoch)
 
     overall_epsilon, sigma = compute_overall_privacy(overall_epsilon_lmo, params['delta'], dataset=dataset, steps=steps)
 
-    return overall_epsilon_lmo, sigma 
+    return overall_epsilon['eps_rdp'], sigma 
 
 
 def get_log_epsilon(epsilon, gamma):
