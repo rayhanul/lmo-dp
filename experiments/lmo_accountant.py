@@ -31,8 +31,12 @@ def get_complete_privacy(epoch, dataset, steps):
             "delta": DEFAULT_DELTA,
 
         }
-    overall_epsilon_lmo, opt_order, rdp_lmo = compute_privacy_lmo(lmo)
+    overall_epsilon_lmo, opt_order, rdp_lmo = compute_privacy_lmo(lmo, steps)
 
     overall_epsilon, sigma = compute_overall_privacy(overall_epsilon_lmo, lmo['delta'], dataset=dataset, steps=steps)
 
-    return overall_epsilon, sigma 
+    # adding impact of epoch T 
+
+    overall_epsilon_lmo  = overall_epsilon_lmo *np.sqrt(epoch)
+
+    return overall_epsilon_lmo, 0 

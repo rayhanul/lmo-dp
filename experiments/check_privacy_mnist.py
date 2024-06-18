@@ -9,7 +9,7 @@ from dataset.dataset_info import dataset_size, classification_steps, batchsize
 
 max_order = 128
 DEFAULT_ALPHAS = range(2, max_order + 1)  # list: [2, 3, ..., 128]
-DEFAULT_DELTA = 1e-10
+DEFAULT_DELTA = 1e-5
 DEFAULT_DISTRIBUTIONS = ["Gamma", "Exponential","Uniform"]
 DEFAULT_DELTA2 = 8e-6
 
