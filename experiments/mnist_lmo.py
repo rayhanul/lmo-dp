@@ -373,7 +373,7 @@ def main():
         run_results.append(test(model, device, test_loader))
         
     average_data= calculate_averages(all_results, args.n_runs)
-    file_name=f'data_r2dp_dynamic{args.budget}.pkl'
+    file_name=f'data_r2dp_dynamic_epoch{args.epochs}_budget_{args.budget}.pkl'
     with open(file_name, 'wb') as file:
         pickle.dump(average_data, file)
 
