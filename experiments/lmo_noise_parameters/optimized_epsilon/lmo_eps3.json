@@ -13,5 +13,6 @@
         "Gamma",
         "Exponential",
         "Uniform"
-    ]
+    ], 
+    "delta":1e-5 
 }
