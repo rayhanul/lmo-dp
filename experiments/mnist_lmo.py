@@ -94,7 +94,7 @@ def get_log_epsilon(epsilon, gamma):
     return result
 
 
-def train(args, model, device, train_loader, optimizer, privacy_engine, rdp_manager, epoch):
+def train(args, model, device, train_loader, optimizer, privacy_engine, rdp_manager, epoch, params):
     model.train()
     criterion = nn.CrossEntropyLoss()
     losses = []
@@ -137,7 +137,7 @@ def train(args, model, device, train_loader, optimizer, privacy_engine, rdp_mana
             ( _, _, steps)= privacy_engine.accountant.history[0]
         else:
             steps=1
-        overall_epsilon, sigma = lmo_accountant.get_complete_privacy(epoch=epoch, dataset="MNIST", steps=938)
+        overall_epsilon, sigma = lmo_accountant.get_complete_privacy(epoch=epoch, params=params, dataset="MNIST", steps=938)
         # overall_epsilon['eps_rdp'] = get_log_epsilon(epsilon=overall_epsilon['eps_rdp'], gamma=args.batch_size/60000)
 
         # print(f"Train Epoch: {epoch} \t Epsilon: {np.mean(overall_epsilon['eps_rdp']):.6f}, \t Accuracy: {accuracy}")
@@ -203,7 +203,7 @@ def main():
     np.random.seed(42)
 
 
-    noise = generate_dynamic_noise('optimized_epsilon/lmo_eps3.json')
+    noise, params = generate_dynamic_noise('optimized_epsilon/lmo_eps3.json')
     noise = np.abs(noise[0])
 
     parser = argparse.ArgumentParser(
@@ -363,7 +363,7 @@ def main():
         rdp_manager = accounting_manager.RDPManager(alphas=DEFAULT_ALPHAS)
 
         for epoch in range(1, args.epochs + 1):
-            data=train(args, model, device, train_loader, optimizer, privacy_engine, rdp_manager, epoch)
+            data=train(args, model, device, train_loader, optimizer, privacy_engine, rdp_manager, epoch, params)
             eps_acc_results.update({epoch:data})
             if args.budget > 0 and data['epsilon'] >= args.budget :
                 

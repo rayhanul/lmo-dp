@@ -13,7 +13,7 @@ def generate_dynamic_noise(path, distributions=["Gamma", "Exponential", "Uniform
 
     b = generate_lmo_b(params, distributions=distributions, noise_size=noise_size)
     noise = np.random.laplace(0, 1/b)
-    return noise
+    return noise, params
 
 
 def generate_lmo_noise(lmo, distributions, noise_size):
