@@ -100,13 +100,19 @@ if __name__ == '__main__':
             # "G_theta": 0.5, "G_k": 1, "E_lambda": 5, "U_b": 2, "U_a": 1,
             # "distributions": DEFAULT_DISTRIBUTIONS,
             # "delta": DEFAULT_DELTA,
-            "a1": 0.2, "a3": 0.2, "a4": 0.3,
-            "G_theta": 1.0, "G_k": 2.0, "E_lambda": 5, "U_b": 1, "U_a": 0,
+
+            # "a1": 0.2, "a3": 0.2, "a4": 0.3,
+            # "G_theta": 1.0, "G_k": 2.0, "E_lambda": 5, "U_b": 1, "U_a": 0,
+            # "distributions": DEFAULT_DISTRIBUTIONS,
+            # "delta": DEFAULT_DELTA,
+
+            "a1": 0.1, "a3": 0.9, "a4": 0.1,
+            "G_theta": 7.5, "G_k": 1.0, "E_lambda": 1, "U_b": 1, "U_a": 0,
             "distributions": DEFAULT_DISTRIBUTIONS,
             "delta": DEFAULT_DELTA,
 
         }
-    
+
     overall_epsilon_lmo, opt_order, rdp_lmo = compute_privacy_lmo(lmo)
     print("  ")
     print("CHECK PRIVACY...")

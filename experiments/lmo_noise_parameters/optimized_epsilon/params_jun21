@@ -1,0 +1,6 @@
+  
+ep = 1 T =100
+MGF1_1 = ((1-lmo['a1']*(alpha-1)*lmo['G_theta'])**(-lmo['G_k']))  # Gamma
+When considering minimum the epsilon below 0.01, we found the parameters: {'a1': 0.1, 'a3': 0.9, 'a4': 0.1, 'G_theta': 7.5, 'G_k': 1, 'E_lambda': 1, 'U_b': 1, 'U_a': 0, 'delta': 1e-05, 'overall_epsilon': 4.995942927574245e-05}.
+When considering maximum the epsilon below 0.01, we found the parameters: {'a1': 0.6, 'a3': 0.9, 'a4': 0.8, 'G_theta': 1, 'G_k': 2, 'E_lambda': 5, 'U_b': 1, 'U_a': 0, 'delta': 1e-05, 'overall_epsilon': 0.009989967174089922}.
+When considering maximum the usefulness below epsilon 0.01, we found the parameters: {'overall_epsilon': 0, 'usefulness': 0}.

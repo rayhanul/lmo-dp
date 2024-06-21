@@ -67,9 +67,11 @@ def get_complete_privacy(epoch, params , dataset, steps=938):
     overall_epsilon_lmo, opt_order, rdp_lmo = compute_privacy_lmo(lmo=params, steps=steps)
 
     # adding effect of T ... 
-    overall_epsilon_lmo = overall_epsilon_lmo * np.sqrt(epoch)
+    # overall_epsilon_lmo = overall_epsilon_lmo * epoch
 
     overall_epsilon, sigma = compute_overall_privacy(overall_epsilon_lmo, params['delta'], dataset=dataset, steps=steps)
+
+    overall_epsilon['eps_rdp'] = overall_epsilon['eps_rdp'] * epoch
 
     return overall_epsilon['eps_rdp'], sigma 
 
@@ -93,22 +95,25 @@ def get_log_epsilon(epsilon, gamma):
 
     return result
 
-# if __name__=="__main__":
-#    lmo = {            "a1": 0.9,
-#             "a3": 0.2,
-#             "a4": 0.8,
-#             "G_theta": 1.0,
-#             "G_k": 2.0,
-#             "E_lambda": 5,
-#             "U_b": 1,
-#             "U_a": 0,
-#              "distributions": DEFAULT_DISTRIBUTIONS,
-#             "delta": DEFAULT_DELTA,}
-#    for i in range(200):
+if __name__=="__main__":
+   lmo = {            
+    #    "a1": 0.9,
+            # "a3": 0.2,
+            # "a4": 0.8,
+            # "G_theta": 1.0,
+            # "G_k": 2.0,
+            # "E_lambda": 5,
+            # "U_b": 1,
+            # "U_a": 0,
+            "a1": 0.1, "a3": 0.1, "a4": 0.1,
+            "G_theta": 5, "G_k": 1.0, "E_lambda": 0.5, "U_b": 1, "U_a": 0,
+             "distributions": DEFAULT_DISTRIBUTIONS,
+            "delta": DEFAULT_DELTA,}
+   for epoch in range(200):
    
-#         x, y, z=  compute_privacy_lmo(lmo, i)
+        overall_epsilon, sigma=  get_complete_privacy(epoch=epoch, params=lmo, dataset="MNIST", steps=1)
 
+        
+        log_epsilon = get_log_epsilon(overall_epsilon, 64/60000 )
 
-#         log_x = get_log_epsilon(x, 64/60000 )
-
-#         print(f"x = {x} and log x {log_x} \n")
+        print(f"Iter={epoch}, overall epsilon = {overall_epsilon} and log_epsilon= {log_epsilon} \n")
