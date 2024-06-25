@@ -100,7 +100,7 @@ def search_epsilon(SS, epsilon_threshold, demo_cnt=1000):
     searched_parameters = {}
     searched_parameters["overall_epsilon"] = 0
     for lmo in take_Si(SS):
-        privacy_lmo = compute_privacy_lmo(lmo)
+        privacy_lmo = compute_privacy_lmo(lmo, steps=928)
         if privacy_lmo==[]:
             continue
         else:
@@ -172,30 +172,30 @@ def save_epsilon_usefulness(SS, epsilon_threshold, lmo_gamma=0.9, demo_cnt=1000)
 
 if __name__ == '__main__':
     S = {
-        "a1": np.linspace(0.1, 0.9, 9),
-        "a3": np.linspace(0.1, 0.9, 9),
-        "a4": np.linspace(0.1, 0.9, 9),
+        "a1": np.linspace(0.1, 1.8,18 ),
+        "a3": np.linspace(0.1, 1.8,18),
+        "a4": np.linspace(0.1, 1.8,18),
         "G_theta_k": [(1,2), (2,2), (3,2), (5,1), (9,0.5), (7.5,1), (0.5,1)],  # k>0; theta>0; t<1/theta
         "E_lambda": [0.1, 0.5, 1, 5],  # E_lambda>0; t<E_lambda;
         "U_b_a": [(1,0), (2,1)],  # b>a; when t=0: MGF=1;
         "delta": [1e-5],
     }
-    T=100
-    epsilon_threshold = 1.0/T 
+    T=43
+    epsilon_threshold = 0.80/T
     lmo_gamma = 0.9
     
     demo_cnt = False  # The options could be {False, "any numbers"(3000, ...)}; Choosing False will go through all the paramters.
     save_df = True
 
-    searched_min_parameters_epsilon = search_minimum_epsilon(S, epsilon_threshold, demo_cnt=demo_cnt)
-    print(f"When considering minimum the epsilon below {epsilon_threshold}, we found the parameters: {searched_min_parameters_epsilon}.")
+    # searched_min_parameters_epsilon = search_minimum_epsilon(S, epsilon_threshold, demo_cnt=demo_cnt)
+    # print(f"When considering minimum the epsilon below {epsilon_threshold}, we found the parameters: {searched_min_parameters_epsilon}.")
 
 
     searched_parameters_epsilon = search_epsilon(S, epsilon_threshold, demo_cnt=demo_cnt)
     print(f"When considering maximum the epsilon below {epsilon_threshold}, we found the parameters: {searched_parameters_epsilon}.")
     
-    searched_parameters_usefulness = search_usefulness(S, epsilon_threshold, lmo_gamma=lmo_gamma, demo_cnt=demo_cnt)
-    print(f"When considering maximum the usefulness below epsilon {epsilon_threshold}, we found the parameters: {searched_parameters_usefulness}.")
+    # searched_parameters_usefulness = search_usefulness(S, epsilon_threshold, lmo_gamma=lmo_gamma, demo_cnt=demo_cnt)
+    # print(f"When considering maximum the usefulness below epsilon {epsilon_threshold}, we found the parameters: {searched_parameters_usefulness}.")
     
     ## another choice: saving the epsilon and the usefulness of all parameters and choosing parameters offline.
     # df = save_epsilon_usefulness(S, epsilon_threshold, lmo_gamma=lmo_gamma, demo_cnt=demo_cnt)
